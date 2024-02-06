@@ -110,6 +110,7 @@ select * from public.students where name = 'Virgil';
 -- for records created in this table
 
 -- you can make a column unique and not null by labeling it "primary key"
+-- drop table public.teams;
 create table public.teams(
 	team_id serial primary key,
 	team_name varchar(20)
@@ -124,16 +125,40 @@ insert into public.teams (team_name)
 values ('Range'),
 ('Hills');
 
+insert into public.teams values (0, 'Free Agent');
 
-drop table public.players;
+
+ drop table public.players;
 create table public.players(
 	player_id serial primary key,
-	team_id int references teams (team_id) on delete cascade ,
-	player_name varchar(20)
+	team_id int not null default 0,
+	player_name varchar(20),
+	-- foreign key constraints are nullable by default, mark the column not null if you want
+	-- to change that
+	
+	--note this foreign key constraint will change the value of any column that points to a
+	-- non-existant foreign key to the column's default value
+	constraint team_id_foreign_key foreign key (team_id) references public.teams(team_id) on delete set default
 );
 
+-- this will not work, no team is referenced, so the record is not created
 insert into public.players (player_name) values ('Billy');
 
+insert into public.players (team_id, player_name) values (4, 'Billy');
+insert into public.players (team_id, player_name) values
+(1, 'Sally'),
+(2, 'Teddy'),
+(3, 'John'),
+(4, 'Geffery');
+
+-- because we have player records that reference the team we are trying to delete
+-- the operation will fail by default
+delete from public.teams where team_id = 4;
+
+-- if we wanted to be able to delete the referenced record there are a few options
+-- on delete restrict is default, see above
+-- on delete cascade will delete any records that reference the deleted record/s
+-- on delete set lets you create a default fallback value
 
 
 
