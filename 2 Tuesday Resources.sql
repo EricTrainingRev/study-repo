@@ -1,3 +1,6 @@
+-- link to Chinook Database: https://github.com/lerocha/chinook-database
+
+
 -- Structured Query Language (SQL)
 -- SQL is used in Relational Databases to provide a consistent language for interacting with 
 -- said databases
