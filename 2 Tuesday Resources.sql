@@ -92,8 +92,47 @@ select * from public.students where name = 'Geffery';
 
 select name from public.students where student_id = 1;
 
+----------------------------------------------------------------------------------------------
+-- CONSTRAINTS
+-- constraints help determine what can and can't go inside a table
+-- some common constraints are "unique" and "not null"
+-- unique makes it so a column must have unique values (no repeats)
+-- not null makes it so a value must be provided for the column
+
+-- in our student example we can provide a name but no id
+INSERT INTO public.students (name) values ('Virgil');
+
+-- this will work, the student_id column will have a NULL value
+select * from public.students where name = 'Virgil';
+
+-- constraints are created when a table is created, though you can add constraints on later
+-- serial is a data type that tells postgres to provide the value (1, then 2, then 3, etc)
+-- for records created in this table
+
+-- you can make a column unique and not null by labeling it "primary key"
+create table public.teams(
+	team_id serial primary key,
+	team_name varchar(20)
+);
+
+-- if your database is providing a value (like for a serial type) you can provide "default"
+insert into public.teams values 
+(default, 'Volcanoes'),
+(default, 'Mountains');
+
+insert into public.teams (team_name) 
+values ('Range'),
+('Hills');
 
 
+drop table public.players;
+create table public.players(
+	player_id serial primary key,
+	team_id int references teams (team_id) on delete cascade ,
+	player_name varchar(20)
+);
+
+insert into public.players (player_name) values ('Billy');
 
 
 
